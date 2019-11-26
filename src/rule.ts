@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { AST, Rule } from "eslint";
-import { ImportDeclaration, ImportSpecifier, Program } from "estree";
+import { ImportDeclaration, ImportSpecifier, Program, SourceLocation } from "estree";
 
 import { ImportGroupDefinition, Options, schema } from "./options";
 import { sort } from "./order";
@@ -59,6 +59,18 @@ function checkGroups(context: Rule.RuleContext, options: Options, groups: Import
       ],
       "unordered import group",
     );
+
+    const seen = new Set();
+    for (const group of groups) {
+      if (seen.has(group.group)) {
+        context.report({
+          loc: group.loc,
+          message: "unmerged import group",
+        });
+      } else {
+        seen.add(group.group);
+      }
+    }
   }
 
   for (const group of groups) {
@@ -104,6 +116,12 @@ class ImportGroup {
 
   get group(): ImportGroupDefinition | undefined {
     return this.imports[0].group;
+  }
+
+  get loc(): SourceLocation {
+    const start = this.imports[0].declaration.loc!.start;
+    const end = this.imports[this.imports.length - 1].declaration.loc!.end;
+    return { start, end };
   }
 
   /** Checks that the members of this group belong in this group. */

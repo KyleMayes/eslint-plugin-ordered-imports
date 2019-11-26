@@ -156,6 +156,29 @@ import b30 from "./b";
       ],
     },
 
+    // "groups" (unmerged)
+    {
+      options: [{ "group-order": groups }],
+      code: `
+import a10 from "a";
+
+import b10 from "b";
+
+import a20 from "../a";
+
+import b20 from "../b";
+
+import a30 from "./a";
+
+import b30 from "./b";
+      `,
+      errors: [
+        { message: "unmerged import group" },
+        { message: "unmerged import group" },
+        { message: "unmerged import group" },
+      ],
+    },
+
     // "groups" (members)
     {
       options: [{ "source-order": "any", "group-order": groups }],
