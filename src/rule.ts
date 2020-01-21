@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { AST, Rule } from "eslint";
-import { ImportDeclaration, ImportSpecifier, Program, SourceLocation } from "estree";
+import { ImportDeclaration, ImportSpecifier, ImportDefaultSpecifier, Program, SourceLocation } from "estree";
 
 import { ImportGroupDefinition, Options, schema } from "./options";
 import { sort } from "./order";
@@ -76,6 +76,7 @@ function checkGroups(context: Rule.RuleContext, options: Options, groups: Import
   for (const group of groups) {
     group.checkMembers(context);
     group.checkSources(context, options);
+    group.checkNames(context, options);
     for (const import_ of group.imports) {
       import_.checkSpecifiers(context, options);
     }
@@ -136,6 +137,24 @@ class ImportGroup {
         }
       }
     }
+  }
+
+  checkNames(context: Rule.RuleContext, options: Options) {
+    const defaultSpecifiers = this.imports
+      .map(i => ({
+          range: i.declaration.range,
+          specifier: i.declaration.specifiers.find(
+            ((s): s is ImportDefaultSpecifier => s.type === "ImportDefaultSpecifier")
+          )
+      }))
+      .filter(i => i.specifier)
+    reorder(
+      context,
+      defaultSpecifiers,
+      s => options.nameOrder(s.specifier?.local.name ?? ""),
+      s => s.range!,
+      "unordered import name"
+    )
   }
 
   /** Checks the ordering of the import sources in this group. */

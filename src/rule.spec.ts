@@ -38,6 +38,16 @@ import B from "B";
 import A from "A";
       `,
     },
+
+    // "name-order": "any"
+    {
+      options: [{ "name-order": "any" }],
+      code: `
+import b from 'a';
+import a from 'b';
+import c from 'c';
+      `,
+    },
   ],
   invalid: [
     // "specifier-order": "lowercase-last"
@@ -124,6 +134,51 @@ import C from "C";
         { message: "unordered import source" },
         { message: "unordered import source" },
       ],
+    },
+
+    // "name-order": "case-insensitive"
+    {
+      options: [{ "source-order": "any", "name-order": "case-insensitive" }],
+      code: `
+import C from "C";
+import { x } from "x";
+import a from "a";
+import b from "b";
+      `,
+      output: `
+import a from "a";
+import { x } from "x";
+import b from "b";
+import C from "C";
+      `,
+      errors: [
+        { message: "unordered import name" },
+        { message: "unordered import name" },
+        { message: "unordered import name" },
+      ]
+    },
+
+    // "name-order": "lowercase-last"
+    {
+      options: [{ "source-order": "any", "name-order": "lowercase-last" }],
+      code: `
+import C from "C";
+import b from "b";
+import { x } from "x";
+import a from "a";
+import D from "D";
+      `,
+      output: `
+import C from "C";
+import D from "D";
+import { x } from "x";
+import a from "a";
+import b from "b";
+      `,
+      errors: [
+        { message: "unordered import name" },
+        { message: "unordered import name" },
+      ]
     },
 
     // "groups" (order)

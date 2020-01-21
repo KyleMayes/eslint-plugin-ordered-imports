@@ -8,6 +8,7 @@ import { Transform, Order, getTransform, orders } from "./order";
 export const schema: JSONSchema4 = {
   "source-order": { enum: orders },
   "specifier-order": { enum: orders },
+  "name-order": { enum: orders },
   "group-order": {
     type: "array",
     items: {
@@ -26,6 +27,7 @@ export const schema: JSONSchema4 = {
 export interface InputOptions {
   "source-order"?: Order;
   "specifier-order"?: Order;
+  "name-order"?: Order;
   "group-order"?: { name: string; match: string; order: number }[];
 }
 
@@ -40,11 +42,13 @@ export interface ImportGroupDefinition {
 export class Options {
   sourceOrder: Transform;
   specifierOrder: Transform;
+  nameOrder: Transform;
   groupOrder?: ImportGroupDefinition[];
 
   constructor(input: InputOptions) {
     this.specifierOrder = getTransform(input["specifier-order"] ?? "lowercase-last");
     this.sourceOrder = getTransform(input["source-order"] ?? "lowercase-last");
+    this.nameOrder = getTransform(input["name-order"] ?? "any");
 
     this.groupOrder = input["group-order"]?.map(g => ({
       name: g.name,
