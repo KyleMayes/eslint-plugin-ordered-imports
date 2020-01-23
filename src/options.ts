@@ -1,33 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import { JSONSchema4 } from "json-schema";
-
-import { Transform, Order, getTransform, orders } from "./order";
-
-/** The schema for the rule options. */
-export const schema: JSONSchema4 = {
-  "source-order": { enum: orders },
-  "specifier-order": { enum: orders },
-  "group-order": {
-    type: "array",
-    items: {
-      type: "object",
-      required: ["name", "match", "order"],
-      properties: {
-        name: { type: "string" },
-        match: { type: "string" },
-        order: { type: "integer" },
-      },
-    },
-  },
-};
-
-/** The input rule options. */
-export interface InputOptions {
-  "source-order"?: Order;
-  "specifier-order"?: Order;
-  "group-order"?: { name: string; match: string; order: number }[];
-}
+import { Input } from "./input";
+import { Transform, getTransform } from "./order";
 
 /** An import group definition. */
 export interface ImportGroupDefinition {
@@ -42,9 +16,9 @@ export class Options {
   specifierOrder: Transform;
   groupOrder?: ImportGroupDefinition[];
 
-  constructor(input: InputOptions) {
-    this.specifierOrder = getTransform(input["specifier-order"] ?? "lowercase-last");
+  constructor(input: Input) {
     this.sourceOrder = getTransform(input["source-order"] ?? "lowercase-last");
+    this.specifierOrder = getTransform(input["specifier-order"] ?? "lowercase-last");
 
     this.groupOrder = input["group-order"]?.map(g => ({
       name: g.name,

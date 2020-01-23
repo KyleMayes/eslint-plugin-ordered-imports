@@ -3,7 +3,7 @@
 import { AST, Rule } from "eslint";
 import { ImportDeclaration, ImportSpecifier, Program, SourceLocation } from "estree";
 
-import { ImportGroupDefinition, Options, schema } from "./options";
+import { ImportGroupDefinition, Options } from "./options";
 import { sort } from "./order";
 
 /** The `"ordered-imports"` rule. */
@@ -11,7 +11,7 @@ export const rule: Rule.RuleModule = {
   meta: {
     type: "layout",
     fixable: "code",
-    schema: [schema],
+    schema: [require("./input.json")],
   },
   create(context) {
     const options = new Options(context.options[0] ?? {});

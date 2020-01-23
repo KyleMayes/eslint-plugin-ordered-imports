@@ -9,7 +9,8 @@
   "scripts": {
     "format": "prettier --write src/*.ts",
     "clean": "rimraf dist",
-    "build": "tsc -p tsconfig.json",
+    "generate": "ts-json-schema-generator -r -f tsconfig.json -t Input > src/input.json",
+    "build": "npm run generate && tsc -p tsconfig.json",
     "test": "mocha --require ts-node/register src/rule.spec.ts",
     "lint": "prettier --check src/*.ts",
     "prepublishOnly": "npm run test && npm run clean && npm run build"
@@ -25,6 +26,7 @@
     "mocha": "~6.2.2",
     "prettier": "~1.19.1",
     "rimraf": "~3.0.0",
+    "ts-json-schema-generator": "~0.58.1",
     "ts-node": "~8.5.2",
     "typescript": "~3.7.2"
   }

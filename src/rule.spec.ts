@@ -2,10 +2,10 @@
 
 import { RuleTester } from "eslint";
 
-import { InputOptions } from "./options";
+import { Input } from "./input";
 import { rule } from "./rule";
 
-const groups: InputOptions["group-order"] = [
+const groups: Input["group-order"] = [
   { name: "parent directories", match: "^\\.\\.", order: 20 },
   { name: "current directory", match: "^\\.", order: 30 },
   { name: "third-party", match: ".*", order: 10 },
