@@ -6,12 +6,18 @@ import { ImportDeclaration, ImportSpecifier, Program, SourceLocation } from "est
 import { ImportGroupDefinition, Options } from "./options";
 import { sort } from "./order";
 
+function getSchema(): object {
+  const schema = require("../input.json");
+  delete schema["$schema"];
+  return schema;
+}
+
 /** The `"ordered-imports"` rule. */
 export const rule: Rule.RuleModule = {
   meta: {
     type: "layout",
     fixable: "code",
-    schema: [require("./input.json")],
+    schema: getSchema(),
   },
   create(context) {
     const options = new Options(context.options[0] ?? {});

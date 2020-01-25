@@ -8,3 +8,6 @@ export interface Input {
   "specifier-order"?: Order;
   "group-order"?: { name: string; match: string; order: number }[];
 }
+
+/** The input rule options array. */
+export type InputArray = [] | [Input];
