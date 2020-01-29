@@ -4,7 +4,7 @@ import { AST, Rule } from "eslint";
 import { ImportDeclaration, ImportSpecifier, Program, SourceLocation } from "estree";
 
 import { ImportGroupDefinition, Options } from "./options";
-import { sort } from "./order";
+import { getNameKey, getSourceKey, getType, getTypeKey } from "./ordering";
 
 function getSchema(): object {
   const schema = require("../input.json");
@@ -53,7 +53,7 @@ function getGroups(program: Program, options: Options): ImportGroup[] {
 
 /** Checks the members and ordering in the supplied import groups. */
 function checkGroups(context: Rule.RuleContext, options: Options, groups: ImportGroup[]) {
-  if (options.groupOrder) {
+  if (options.groupOrdering) {
     const source = context.getSourceCode();
     reorder(
       context,
@@ -81,7 +81,7 @@ function checkGroups(context: Rule.RuleContext, options: Options, groups: Import
 
   for (const group of groups) {
     group.checkMembers(context);
-    group.checkSources(context, options);
+    group.checkDeclarations(context, options);
     for (const import_ of group.imports) {
       import_.checkSpecifiers(context, options);
     }
@@ -94,7 +94,7 @@ class Import {
 
   constructor(public declaration: ImportDeclaration, options: Options) {
     const source = declaration.source.value as string;
-    this.group = options.groupOrder?.find(g => g.match.test(source));
+    this.group = options.groupOrdering?.find(g => g.match.test(source));
   }
 
   /** Returns whether this import and the supplied import are adjacent. */
@@ -109,7 +109,7 @@ class Import {
     reorder(
       context,
       this.declaration.specifiers.filter((s): s is ImportSpecifier => s.type === "ImportSpecifier"),
-      s => options.specifierOrder(s.imported.name),
+      s => getNameKey(s.imported.name, options.specifierOrdering),
       s => s.range!,
       "unordered import specifier",
     );
@@ -144,15 +144,61 @@ class ImportGroup {
     }
   }
 
-  /** Checks the ordering of the import sources in this group. */
-  checkSources(context: Rule.RuleContext, options: Options) {
+  /** Checks the ordering of the import declarations in this group. */
+  checkDeclarations(context: Rule.RuleContext, options: Options) {
+    if (!options.declarationOrdering) {
+      return;
+    }
+
+    // Filter out the side-effect and destructed import declarations for the name ordering.
+    let declarations = this.imports.map(i => i.declaration);
+    if (options.declarationOrdering.kind === "name") {
+      declarations = declarations.filter(d => {
+        const type = getType(d);
+        return type === "default" || type === "namespace";
+      });
+    }
+
     reorder(
       context,
-      this.imports.map(i => i.declaration),
-      s => options.sourceOrder(s.source.value?.toString() ?? ""),
+      declarations,
+      s => getDeclarationKey(s, options.declarationOrdering!),
       s => s.range!,
-      "unordered import source",
+      "unordered import declaration",
     );
+  }
+}
+
+/** Returns a key to sort the supplied import declaration in the supplied ordering. */
+function getDeclarationKey(
+  declaration: ImportDeclaration,
+  ordering: Required<Options>["declarationOrdering"],
+): string {
+  const name = declaration.specifiers.map(d => d.local.name).find(n => n) ?? "";
+  const source = declaration.source.value?.toString() ?? "";
+  switch (ordering.kind) {
+    case "name":
+      return getNameKey(name, ordering.ordering);
+    case "source":
+      return getSourceKey(source, ordering.ordering);
+    case "type":
+      const primary = getTypeKey(declaration, ordering.ordering);
+
+      let secondary = "";
+      if (ordering.secondaryOrdering) {
+        if (ordering.secondaryOrdering.kind === "name") {
+          const type = getType(declaration);
+          if (type === "default" || type === "namespace") {
+            secondary = getNameKey(name, ordering.secondaryOrdering.ordering);
+          } else {
+            secondary = "";
+          }
+        } else {
+          secondary = getSourceKey(source, ordering.secondaryOrdering.ordering);
+        }
+      }
+
+      return `${primary}:${secondary}`;
   }
 }
 
@@ -191,4 +237,19 @@ function reorder<T>(
       });
     }
   }
+}
+
+/** Returns a sorted copy of the supplied import values using the supplied key mapper. */
+export function sort<T>(values: T[], key: (item: T) => string): T[] {
+  return values.slice().sort((a, b) => {
+    const aKey = key(a);
+    const bKey = key(b);
+    if (aKey > bKey) {
+      return 1;
+    } else if (aKey < bKey) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
 }

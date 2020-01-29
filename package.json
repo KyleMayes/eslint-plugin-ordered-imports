@@ -9,7 +9,7 @@
   "scripts": {
     "format": "prettier --write src/*.ts",
     "clean": "rimraf dist",
-    "generate": "ts-json-schema-generator -r -f tsconfig.json -t InputArray -o input.json",
+    "generate": "ts-json-schema-generator -r -f tsconfig.json -t InputOptionsArray -o input.json",
     "build": "npm run generate && tsc -p tsconfig.json",
     "test": "mocha --require ts-node/register src/rule.spec.ts",
     "lint": "prettier --check src/*.ts",
