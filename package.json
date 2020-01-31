@@ -6,6 +6,11 @@
   "author": "Kyle Mayes <kyle@mayeses.com> (https://kylemayes.com)",
   "repository": "github:KyleMayes/eslint-plugin-ordered-imports",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src",
+    "input.json"
+  ],
   "scripts": {
     "format": "prettier --write src/*.ts",
     "clean": "rimraf dist",
