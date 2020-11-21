@@ -28,6 +28,7 @@ tester.run("ordered-imports", rule, {
 import e from "e";
 import { b, c, d } from "bcd";
 import a from "a";
+import _ from "lodash";
       `,
     },
 
@@ -36,6 +37,7 @@ import a from "a";
     {
       options: [{ "declaration-ordering": ["name", "case-insensitive"] }],
       code: `
+import _ from "lodash";
 import a from "e";
 import A from "E";
 import { b, c, d } from "bcd";
@@ -46,6 +48,7 @@ import E from "A";
     {
       options: [{ "declaration-ordering": ["name", "lowercase-last"] }],
       code: `
+import _ from "lodash";
 import A from "E";
 import E from "A";
 import { b, c, d } from "bcd";
@@ -63,6 +66,7 @@ import * as A from "A";
 import b from "b";
 import "C";
 import { d } from "d";
+import _ from "lodash";
 import a from "./a";
 import B from "./B";
       `,
@@ -74,6 +78,7 @@ import * as A from "A";
 import "C";
 import b from "b";
 import { d } from "d";
+import _ from "lodash";
 import B from "./B";
 import a from "./a";
       `,
@@ -88,6 +93,7 @@ import a from "./a";
       code: `
 import "d";
 import "D";
+import _ from "lodash";
 import a from "A";
 import A from "a";
 import * as b from "b";
@@ -103,6 +109,7 @@ import { C } from "C";
       code: `
 import "D";
 import "d";
+import _ from "lodash";
 import A from "a";
 import a from "A";
 import * as B from "B";
@@ -120,6 +127,7 @@ import "g";
 import "H";
 import a from "a";
 import B from "B";
+import _ from "lodash";
 import * as c from "c";
 import * as D from "D";
 import { e } from "e";
@@ -135,6 +143,7 @@ import "H";
 import "g";
 import B from "B";
 import a from "a";
+import _ from "lodash";
 import * as D from "D";
 import * as c from "c";
 import { E } from "F";
@@ -148,6 +157,7 @@ import "z1";
 import "a1";
 import z2 from "z2";
 import a2 from "a2";
+import _ from "lodash";
 import * as z3 from "z3";
 import * as a3 from "a3";
 import { z4 } from "z4";
@@ -203,11 +213,13 @@ import c from "z2";
 import { foo } from "foo";
 import B from "z3";
 import a from "z4";
+import _ from "lodash";
       `,
       output: `
+import _ from "lodash";
 import a from "z4";
-import B from "z3";
 import { foo } from "foo";
+import B from "z3";
 import c from "z2";
 import D from "z1";
       `,
@@ -226,11 +238,13 @@ import c from "z2";
 import { foo } from "foo";
 import B from "z3";
 import a from "z4";
+import _ from "lodash";
       `,
       output: `
+import _ from "lodash";
 import B from "z3";
-import D from "z1";
 import { foo } from "foo";
+import D from "z1";
 import a from "z4";
 import c from "z2";
       `,
@@ -247,6 +261,7 @@ import c from "z2";
     {
       options: [{ "declaration-ordering": ["source", "case-insensitive"] }],
       code: `
+import _ from "lodash";
 import z1 from "D";
 import z2 from "c";
 import { foo } from "foo";
@@ -259,6 +274,7 @@ import z3 from "B";
 import z2 from "c";
 import z1 from "D";
 import { foo } from "foo";
+import _ from "lodash";
       `,
       errors: [
         { message: "unordered import declaration" },
@@ -271,6 +287,7 @@ import { foo } from "foo";
     {
       options: [{ "declaration-ordering": ["source", "lowercase-last"] }],
       code: `
+import _ from "lodash";
 import z1 from "D";
 import z2 from "c";
 import { foo } from "foo";
@@ -283,6 +300,7 @@ import z1 from "D";
 import z4 from "a";
 import z2 from "c";
 import { foo } from "foo";
+import _ from "lodash";
       `,
       errors: [
         { message: "unordered import declaration" },
@@ -306,12 +324,14 @@ import * as D from "z3";
 import * as c from "z4";
 import F from "z5";
 import e from "z6";
+import _ from "lodash";
 import "z7";
 import "z8";
       `,
       output: `
 import "z7";
 import "z8";
+import _ from "lodash";
 import e from "z6";
 import F from "z5";
 import * as c from "z4";
@@ -341,12 +361,14 @@ import * as c from "z3";
 import * as D from "z4";
 import e from "z5";
 import F from "z6";
+import _ from "lodash";
 import "z7";
 import "z8";
       `,
       output: `
 import "z7";
 import "z8";
+import _ from "lodash";
 import F from "z6";
 import e from "z5";
 import * as D from "z4";
@@ -374,6 +396,7 @@ import { z1 } from "B";
 import { z2 } from "a";
 import * as z3 from "D";
 import * as z4 from "c";
+import _ from "lodash";
 import z5 from "F";
 import z6 from "e";
 import "H";
@@ -384,6 +407,7 @@ import "g";
 import "H";
 import z6 from "e";
 import z5 from "F";
+import _ from "lodash";
 import * as z4 from "c";
 import * as z3 from "D";
 import { z2 } from "a";
@@ -409,6 +433,7 @@ import { z1 } from "a";
 import { z2 } from "B";
 import * as z3 from "c";
 import * as z4 from "D";
+import _ from "lodash";
 import z5 from "e";
 import z6 from "F";
 import "g";
@@ -419,6 +444,7 @@ import "H";
 import "g";
 import z6 from "F";
 import z5 from "e";
+import _ from "lodash";
 import * as z4 from "D";
 import * as z3 from "c";
 import { z2 } from "B";
@@ -444,6 +470,7 @@ import * as z3 from "z3";
 import * as a3 from "a3";
 import z2 from "z2";
 import a2 from "a2";
+import _ from "lodash";
 import "z1";
 import "a1";
       `,
@@ -452,12 +479,14 @@ import "z1";
 import "a1";
 import z2 from "z2";
 import a2 from "a2";
+import _ from "lodash";
 import * as z3 from "z3";
 import * as a3 from "a3";
 import { z4 } from "z4";
 import { a4 } from "a4";
       `,
       errors: [
+        { message: "unordered import declaration" },
         { message: "unordered import declaration" },
         { message: "unordered import declaration" },
         { message: "unordered import declaration" },

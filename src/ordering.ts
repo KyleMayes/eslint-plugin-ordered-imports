@@ -22,6 +22,11 @@ export type NameOrdering = "case-insensitive" | "lowercase-last" | "any";
 
 /** Returns a key to sort the supplied import name in the supplied ordering. */
 export function getNameKey(name: Name, ordering: NameOrdering): string {
+  // Sort names that start with symbols before other names.
+  if (!!name.match(/^[_$]/)) {
+    name = `\0${name}`;
+  }
+
   switch (ordering) {
     case "case-insensitive":
       return name.toUpperCase();
