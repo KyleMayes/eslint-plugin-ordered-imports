@@ -32,6 +32,9 @@ is the structure of the rule configuration defined in TypeScript.
 type Type = "side-effect" | "default" | "namespace" | "destructured";
 
 type Configuration = {
+  // Defines whether symbols (e.g., `$` or `_`) are sorted before other strings.
+  // Default = `true`
+  "symbols-first"?: boolean;
   // Defines how import declarations are ordered.
   // Default = `["source", "lowercase-last"]`
   "declaration-ordering"?:
@@ -84,6 +87,7 @@ values):
     "ordered-imports/ordered-imports": [
       "error",
       {
+        "symbols-first": true,
         "declaration-ordering": ["type", {
           ordering: ["side-effect", "default", "namespace", "destructured"],
           secondaryOrdering: ["name", "lowercase-last"],

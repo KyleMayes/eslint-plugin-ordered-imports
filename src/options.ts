@@ -9,6 +9,7 @@ import { NameOrdering, SourceOrdering, TypeOrdering } from "./ordering";
 /** The definition for the rule options. */
 // prettier-ignore
 export interface InputOptions {
+  "symbols-first"?: boolean;
   "declaration-ordering"?:
     | ["any"]
     | ["name", "case-insensitive" | "lowercase-last"]
@@ -59,11 +60,14 @@ export interface ImportGroupDefinition {
 
 /** The rule options. */
 export class Options {
+  symbolsFirst: boolean;
   declarationOrdering?: NameOrderingOption | SourceOrderingOption | TypeOrderingOption;
   specifierOrdering: NameOrdering;
   groupOrdering?: ImportGroupDefinition[];
 
   constructor(input: InputOptions) {
+    this.symbolsFirst = input["symbols-first"] ?? true;
+
     const declarationOrdering = input["declaration-ordering"];
     if (declarationOrdering) {
       if (declarationOrdering[0] === "name") {

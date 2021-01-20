@@ -21,9 +21,9 @@ export type Name = string;
 export type NameOrdering = "case-insensitive" | "lowercase-last" | "any";
 
 /** Returns a key to sort the supplied import name in the supplied ordering. */
-export function getNameKey(name: Name, ordering: NameOrdering): string {
-  // Sort names that start with symbols before other names.
-  if (!!name.match(/^[_$]/)) {
+export function getNameKey(name: Name, ordering: NameOrdering, symbolsFirst: boolean): string {
+  // Sort names that start with symbols before other names (if requested).
+  if (symbolsFirst && !!name.match(/^[_$]/)) {
     name = `\0${name}`;
   }
 
@@ -56,9 +56,13 @@ export type Source = string;
 export type SourceOrdering = NameOrdering;
 
 /** Returns a key to sort the supplied import source in the supplied ordering. */
-export function getSourceKey(source: Source, ordering: SourceOrdering): string {
+export function getSourceKey(
+  source: Source,
+  ordering: SourceOrdering,
+  symbolsFirst: boolean,
+): string {
   const high = source[0] === "." || source[0] === "/" ? 1 : 0;
-  const key = getNameKey(source, ordering);
+  const key = getNameKey(source, ordering, symbolsFirst);
   return `${high}${key}`;
 }
 

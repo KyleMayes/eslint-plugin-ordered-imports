@@ -57,6 +57,32 @@ import e from "a";
       `,
     },
 
+    // "symbols-first": false
+    // "declaration-ordering": ["name", ?]
+
+    {
+      options: [{ "symbols-first": false, "declaration-ordering": ["name", "case-insensitive"] }],
+      code: `
+import a from "e";
+import A from "E";
+import { b, c, d } from "bcd";
+import e from "a";
+import E from "A";
+import _ from "lodash";
+      `,
+    },
+    {
+      options: [{ "symbols-first": false, "declaration-ordering": ["name", "lowercase-last"] }],
+      code: `
+import A from "E";
+import E from "A";
+import { b, c, d } from "bcd";
+import _ from "lodash";
+import a from "e";
+import e from "a";
+      `,
+    },
+
     // "declaration-ordering": ["source", ?]
 
     {
@@ -169,21 +195,37 @@ import { a4 } from "a4";
 
     {
       options: [{ "specifier-ordering": "any" }],
-      code: `import { c, b, a, C, B, A } from "a";`,
+      code: `import { _, c, b, a, C, B, A } from "a";`,
     },
 
     // "specifier-ordering": "lowercase-last"
 
     {
       options: [{ "specifier-ordering": "lowercase-last" }],
-      code: `import { A, B, C, a, b, c } from "a";`,
+      code: `import { _, A, B, C, a, b, c } from "a";`,
     },
 
     // "specifier-ordering": "case-insensitive"
 
     {
       options: [{ "specifier-ordering": "case-insensitive" }],
-      code: `import { A, a, B, b, C, c } from "a";`,
+      code: `import { _, A, a, B, b, C, c } from "a";`,
+    },
+
+    // "symbols-first": false
+    // "specifier-ordering": "lowercase-last"
+
+    {
+      options: [{ "symbols-first": false, "specifier-ordering": "lowercase-last" }],
+      code: `import { A, B, C, _, a, b, c } from "a";`,
+    },
+
+    // "symbols-first": false
+    // "specifier-ordering": "case-insensitive"
+
+    {
+      options: [{ "symbols-first": false, "specifier-ordering": "case-insensitive" }],
+      code: `import { A, a, B, b, C, c, _ } from "a";`,
     },
 
     // "group-ordering"

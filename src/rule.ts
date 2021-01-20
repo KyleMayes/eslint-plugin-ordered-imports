@@ -109,7 +109,7 @@ class Import {
     reorder(
       context,
       this.declaration.specifiers.filter((s): s is ImportSpecifier => s.type === "ImportSpecifier"),
-      s => getNameKey(s.imported.name, options.specifierOrdering),
+      s => getNameKey(s.imported.name, options.specifierOrdering, options.symbolsFirst),
       s => s.range!,
       "unordered import specifier",
     );
@@ -162,7 +162,7 @@ class ImportGroup {
     reorder(
       context,
       declarations,
-      s => getDeclarationKey(s, options.declarationOrdering!),
+      s => getDeclarationKey(s, options.declarationOrdering!, options.symbolsFirst),
       s => s.range!,
       "unordered import declaration",
     );
@@ -173,14 +173,15 @@ class ImportGroup {
 function getDeclarationKey(
   declaration: ImportDeclaration,
   ordering: Required<Options>["declarationOrdering"],
+  symbolsFirst: boolean,
 ): string {
   const name = declaration.specifiers.map(d => d.local.name).find(n => n) ?? "";
   const source = declaration.source.value?.toString() ?? "";
   switch (ordering.kind) {
     case "name":
-      return getNameKey(name, ordering.ordering);
+      return getNameKey(name, ordering.ordering, symbolsFirst);
     case "source":
-      return getSourceKey(source, ordering.ordering);
+      return getSourceKey(source, ordering.ordering, symbolsFirst);
     case "type":
       const primary = getTypeKey(declaration, ordering.ordering);
 
@@ -189,12 +190,12 @@ function getDeclarationKey(
         if (ordering.secondaryOrdering.kind === "name") {
           const type = getType(declaration);
           if (type === "default" || type === "namespace") {
-            secondary = getNameKey(name, ordering.secondaryOrdering.ordering);
+            secondary = getNameKey(name, ordering.secondaryOrdering.ordering, symbolsFirst);
           } else {
             secondary = "";
           }
         } else {
-          secondary = getSourceKey(source, ordering.secondaryOrdering.ordering);
+          secondary = getSourceKey(source, ordering.secondaryOrdering.ordering, symbolsFirst);
         }
       }
 
