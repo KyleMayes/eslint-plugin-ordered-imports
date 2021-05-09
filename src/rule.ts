@@ -58,7 +58,7 @@ function checkGroups(context: Rule.RuleContext, options: Options, groups: Import
     reorder(
       context,
       groups,
-      g => (g.group?.order ?? Number.MAX_SAFE_INTEGER).toString(),
+      g => g.group?.order ?? Number.MAX_SAFE_INTEGER,
       g => [
         source.getIndexFromLoc(g.imports[0].declaration.loc!.start),
         source.getIndexFromLoc(g.imports[g.imports.length - 1].declaration.loc!.end),
@@ -204,10 +204,10 @@ function getDeclarationKey(
 }
 
 /** Reorders a list of values with AST ranges to be in a particular order. */
-function reorder<T>(
+function reorder<T, K extends number | string>(
   context: Rule.RuleContext,
   values: T[],
-  key: (value: T) => string,
+  key: (value: T) => K,
   range: (value: T) => AST.Range,
   message: string,
 ) {
@@ -241,7 +241,7 @@ function reorder<T>(
 }
 
 /** Returns a sorted copy of the supplied import values using the supplied key mapper. */
-export function sort<T>(values: T[], key: (item: T) => string): T[] {
+export function sort<T, K extends number | string>(values: T[], key: (item: T) => K): T[] {
   return values.slice().sort((a, b) => {
     const aKey = key(a);
     const bKey = key(b);

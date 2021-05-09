@@ -6,9 +6,9 @@ import { InputOptions } from "./options";
 import { rule } from "./rule";
 
 const groups: InputOptions["group-ordering"] = [
-  { name: "parent directories", match: "^\\.\\.", order: 20 },
-  { name: "current directory", match: "^\\.", order: 30 },
-  { name: "third-party", match: ".*", order: 10 },
+  { name: "parent directories", match: "^\\.\\.", order: 10 },
+  { name: "current directory", match: "^\\.", order: 20 },
+  { name: "third-party", match: ".*", order: 5 },
 ];
 
 const tester = new RuleTester({
