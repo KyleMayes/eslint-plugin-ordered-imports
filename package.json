@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-ordered-imports",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "An ESLint rule for sorting and grouping imports.",
   "license": "Apache-2.0",
   "author": "Kyle Mayes <kyle@mayeses.com> (https://kylemayes.com)",
@@ -20,17 +20,17 @@
     "prepublishOnly": "npm run clean && npm run build && npm run test"
   },
   "peerDependencies": {
-    "eslint": "^7.0.0"
+    "eslint": "^7.0.0 || ^8.0.0"
   },
   "devDependencies": {
-    "@types/eslint": "~7.2.13",
-    "@types/node": "~14.14.22",
-    "eslint": "~7.28.0",
-    "mocha": "~9.0.0",
-    "prettier": "~2.3.1",
-    "rimraf": "~3.0.2",
-    "ts-json-schema-generator": "~0.93.0",
-    "ts-node": "~10.0.0",
-    "typescript": "~4.3.2"
+    "@types/eslint": "8.2.0",
+    "@types/node": "14.17.34",
+    "eslint": "8.3.0",
+    "mocha": "9.1.3",
+    "prettier": "2.4.1",
+    "rimraf": "3.0.2",
+    "ts-json-schema-generator": "0.97.0",
+    "ts-node": "10.4.0",
+    "typescript": "4.5.2"
   }
 }
