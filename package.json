@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-ordered-imports",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "An ESLint rule for sorting and grouping imports.",
   "license": "Apache-2.0",
   "author": "Kyle Mayes <kyle@mayeses.com> (https://kylemayes.com)",
